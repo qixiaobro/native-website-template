@@ -12,6 +12,9 @@ const cleanCSS = require('gulp-clean-css');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
 const imagemin = require('gulp-imagemin');
+const rev = require('gulp-rev');
+const revReplace = require('gulp-rev-replace');
+const fs = require('fs');
 
 const srcPath = {
   html: 'src/html',
@@ -99,6 +102,10 @@ task('cssRelease', () => src(`${srcPath.css}/*.scss`)
       keepSpecialComments: '*',
     }),
   )
+  .pipe(rev())
+  .pipe(dest(`${destPath.css}`))
+  .pipe(rev.manifest())
+  .pipe(dest(`${destPath.css}`))
   .pipe(src([`${srcPath.css}/plugins/*.css`]))
   .pipe(dest(`${destPath.css}`)));
 
@@ -109,6 +116,10 @@ task('jsRelease', () => src(`${srcPath.js}/*.js`)
     }),
   )
   .pipe(uglify())
+  .pipe(rev())
+  .pipe(dest(`${destPath.js}`))
+  .pipe(rev.manifest())
+  .pipe(dest(`${destPath.js}`))
   .pipe(src([`${srcPath.js}/plugins/*.js`]))
   .pipe(dest(`${destPath.js}`)));
 
@@ -123,7 +134,42 @@ task('imgRelease', () => src(`${srcPath.assets}/*`)
       }),
     ]),
   )
+  .pipe(rev())
+  .pipe(dest(`${destPath.assets}`))
+  .pipe(rev.manifest())
   .pipe(dest(`${destPath.assets}`)));
+
+// task('deleted',()=>{
+//  return{
+//   src('dist/*')
+//   .pipe(deleted({src,dele}))
+//  }
+// })
+task('delete', (cb) => {
+  fs.unlinkSync(`${destPath.assets}/rev-manifest.json`);
+  fs.unlinkSync(`${destPath.js}/rev-manifest.json`);
+  fs.unlinkSync(`${destPath.css}/rev-manifest.json`);
+  return cb();
+});
+
+task('replaceJs', () => {
+  const manifest = src(`${destPath.js}/rev-manifest.json`);
+  return src(`${destPath.html}/*.html`)
+    .pipe(revReplace({ manifest }))
+    .pipe(dest(`${destPath.html}`));
+});
+task('replaceCss', () => {
+  const manifest = src(`${destPath.css}/rev-manifest.json`);
+  return src(`${destPath.html}/*.html`)
+    .pipe(revReplace({ manifest }))
+    .pipe(dest(`${destPath.html}`));
+});
+task('replaceImg', () => {
+  const manifest = src(`${destPath.assets}/rev-manifest.json`);
+  return src(`${destPath.html}/*.html`)
+    .pipe(revReplace({ manifest }))
+    .pipe(dest(`${destPath.html}`));
+});
 
 task(
   'dev',
@@ -139,5 +185,9 @@ task(
   series(
     'clean',
     parallel('htmlRelease', 'cssRelease', 'jsRelease', 'imgRelease'),
+    'replaceJs',
+    'replaceCss',
+    'replaceImg',
+    'delete',
   ),
 );
