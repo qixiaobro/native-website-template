@@ -14,6 +14,9 @@ Native multi-page web development templates powered by gulp.
 - Img Compression
 - Filename Hash
 
+## Plugins
+- Jquery-3.5.1
+
 ## Try it now!
 
 ### Github Template
