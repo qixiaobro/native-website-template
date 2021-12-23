@@ -1,4 +1,2 @@
-const a = 4;
-const b = 3;
-const c = a + b;
-console.log(c);
+const add = (a, b) => a + b;
+console.log(add(3, 4));

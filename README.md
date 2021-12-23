@@ -2,13 +2,43 @@
 
 Native multi-page web development templates powered by gulp.
 
-基础功能  
-- [x] HMR
+## Features
 
-- [x] 环境区分
+- HMR
+- Environmental Distinction
+- Scss Support
+- Html Compression
+- Css Compression
+- Babel
+- JS Compression
+- Img Compression
+- Filename Hash
 
-- [x] 代码压缩
+## Try it now!
 
-- [x] 图片压缩
+### Github Template
+[Create a repo from this template on GitHub](https://github.com/qixiaobro/native-website-template/generate).
 
-- [x] babel
+### Clone to local
+```javascript
+git clone https://github.com/qixiaobro/native-website-template.git
+``` 
+## Usage
+```bash
+npm i
+```
+### Development
+
+Just run and visit http://localhost:8000
+
+```bash
+npm run dev
+```
+
+### Build
+
+To build the App, run
+
+```bash
+npm run build
+```
