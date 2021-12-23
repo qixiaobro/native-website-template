@@ -139,12 +139,6 @@ task('imgRelease', () => src(`${srcPath.assets}/*`)
   .pipe(rev.manifest())
   .pipe(dest(`${destPath.assets}`)));
 
-// task('deleted',()=>{
-//  return{
-//   src('dist/*')
-//   .pipe(deleted({src,dele}))
-//  }
-// })
 task('delete', (cb) => {
   fs.unlinkSync(`${destPath.assets}/rev-manifest.json`);
   fs.unlinkSync(`${destPath.js}/rev-manifest.json`);
